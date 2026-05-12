@@ -16,6 +16,7 @@ TorchSig
     :maxdepth: 2
     :caption: Contents:
 
+    functionality_zh
     datasets
     signals
     transforms

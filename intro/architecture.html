@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TorchSig 项目介绍 | 组成</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="TorchSig intro navigation">
+  <a class="brand" href="index.html"><span class="brand-mark">TS</span><span>TorchSig Intro</span></a>
+  <div class="nav-links">
+    <a href="index.html">概览</a>
+    <a href="capabilities.html">能力</a>
+    <a href="architecture.html">组成</a>
+    <a href="workflow.html">原理</a>
+    <a href="usage.html">使用</a>
+    <button class="theme-toggle" type="button" data-theme-toggle>切换主题</button>
+  </div>
+</nav>
+<main>
+  <section class="hero">
+    <div class="eyebrow">Architecture</div>
+    <h1>TorchSig 由哪些模块组成？</h1>
+    <p class="lead">项目结构围绕数据集、信号对象、信号生成器、transform、文件读写和默认配置展开。</p>
+  </section>
+
+  <section>
+    <h2>模块职责</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>模块</th><th>关键对象</th><th>作用</th></tr></thead>
+        <tbody>
+          <tr><td><code>torchsig/datasets</code></td><td>TorchSigIterableDataset, StaticTorchSigDataset, TorchSigDataModule</td><td>动态生成样本、加载静态数据集、适配 Lightning 训练。</td></tr>
+          <tr><td><code>torchsig/signals</code></td><td>Signal, SignalMetadataObject, BaseSignalGenerator</td><td>描述信号数据和元数据，提供各调制类别的生成器。</td></tr>
+          <tr><td><code>torchsig/transforms</code></td><td>Transform, Compose, Impairments, Spectrogram, YOLOLabel</td><td>实现损伤、增强、表示转换和检测标签转换。</td></tr>
+          <tr><td><code>torchsig/utils</code></td><td>DatasetCreator, WorkerSeedingDataLoader, TorchSigDefaults</td><td>提供写盘、可复现加载、默认元数据和 DSP 工具。</td></tr>
+          <tr><td><code>scripts</code></td><td>generate_dataset_from_config.py</td><td>从 YAML 配置生成可复用的离线数据集。</td></tr>
+          <tr><td><code>examples</code></td><td>notebooks</td><td>演示分类、检测、数据创建、文件处理和 transform 可视化。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>对象关系</h2>
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="node"><strong>YAML / metadata</strong><br>定义采样率、样本长度、信号数量、SNR、带宽和输出表示。</div>
+        <div class="node"><strong>Signal generators</strong><br>按类别或调制族生成 component signal。</div>
+        <div class="node"><strong>Transforms</strong><br>对 component 或完整样本应用损伤、增强和格式转换。</div>
+      </div>
+      <div class="diagram-row">
+        <div class="node"><strong>TorchSigIterableDataset</strong><br>生成无限流式样本，可直接接 DataLoader。</div>
+        <div class="node"><strong>DatasetCreator</strong><br>把动态样本写成静态数据集。</div>
+        <div class="node"><strong>StaticTorchSigDataset</strong><br>从磁盘随机访问已生成样本。</div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><a class="button" href="workflow.html">下一页：工作原理</a></footer>
+<script src="assets/main.js"></script>
+</body>
+</html>

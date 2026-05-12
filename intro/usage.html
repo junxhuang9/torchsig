@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TorchSig 项目介绍 | 使用</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="TorchSig intro navigation">
+  <a class="brand" href="index.html"><span class="brand-mark">TS</span><span>TorchSig Intro</span></a>
+  <div class="nav-links">
+    <a href="index.html">概览</a>
+    <a href="capabilities.html">能力</a>
+    <a href="architecture.html">组成</a>
+    <a href="workflow.html">原理</a>
+    <a href="usage.html">使用</a>
+    <button class="theme-toggle" type="button" data-theme-toggle>切换主题</button>
+  </div>
+</nav>
+<main>
+  <section class="hero">
+    <div class="eyebrow">Usage</div>
+    <h1>如何开始使用 TorchSig？</h1>
+    <p class="lead">可以直接用 Python API 在线生成样本，也可以通过 YAML 配置批量生成离线数据集。</p>
+  </section>
+
+  <section>
+    <h2>1. 安装开发版</h2>
+    <pre><code>git clone https://github.com/TorchDSP/torchsig.git
+cd torchsig
+pip install -e .</code></pre>
+  </section>
+
+  <section>
+    <h2>2. 在线生成一个小型分类数据流</h2>
+    <pre><code>from torchsig.datasets.datasets import TorchSigIterableDataset
+from torchsig.transforms.transforms import ComplexTo2D
+from torchsig.utils.defaults import TorchSigDefaults
+from torchsig.utils.data_loading import WorkerSeedingDataLoader
+
+metadata = TorchSigDefaults().default_dataset_metadata
+metadata.update({
+    "num_iq_samples_dataset": 4096,
+    "fft_size": 64,
+    "fft_stride": 64,
+    "num_signals_min": 1,
+    "num_signals_max": 1,
+})
+
+dataset = TorchSigIterableDataset(
+    signal_generators=["bpsk", "qpsk", "16qam"],
+    metadata=metadata,
+    transforms=[ComplexTo2D()],
+    target_labels=["class_index"],
+    seed=123,
+)
+
+loader = WorkerSeedingDataLoader(dataset, seed=123, batch_size=8, num_workers=0)
+inputs, labels = next(iter(loader))</code></pre>
+  </section>
+
+  <section>
+    <h2>3. 通过 YAML 生成离线数据集</h2>
+    <pre><code>python scripts/generate_dataset_from_config.py \
+  --root ./data \
+  --config torchsig/datasets/default_configs/narrowband_toy_dataset.yaml \
+  --overwrite \
+  --batch_size 32 \
+  --num_workers 0 \
+  --save_config_copy</code></pre>
+    <div class="callout">YAML 的关键字段包括 <code>dataset_length</code>、<code>seed</code>、<code>impairment_level</code>、<code>output.representation</code>、<code>signal_sampling.mode</code> 和 <code>dataset_metadata</code>。</div>
+  </section>
+
+  <section>
+    <h2>4. 加载已生成数据集</h2>
+    <pre><code>from torchsig.datasets.datasets import StaticTorchSigDataset
+
+static_dataset = StaticTorchSigDataset(
+    root="./data/narrowband_toy_dataset",
+    target_labels=["class_index"],
+)
+
+sample, target = static_dataset[0]</code></pre>
+  </section>
+
+  <section>
+    <h2>5. 选型建议</h2>
+    <div class="grid">
+      <article class="card"><h3>我要训练分类器</h3><p>设置 <code>num_signals_max=1</code>，使用 <code>ComplexTo2D</code> 或原始 I/Q，标签选择 <code>class_index</code>。</p></article>
+      <article class="card"><h3>我要训练检测器</h3><p>设置 <code>num_signals_max&gt;1</code>，使用 <code>Spectrogram</code> 和 <code>YOLOLabel</code>。</p></article>
+      <article class="card"><h3>我要复现实验</h3><p>固定 YAML、seed 和输出目录，使用 <code>DatasetCreator</code> 生成静态 HDF5 数据集。</p></article>
+    </div>
+  </section>
+</main>
+<footer class="footer"><a class="button" href="index.html">返回概览</a></footer>
+<script src="assets/main.js"></script>
+</body>
+</html>
