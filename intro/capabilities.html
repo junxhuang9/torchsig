@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TorchSig 项目介绍 | 能力</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="TorchSig intro navigation">
+  <a class="brand" href="index.html"><span class="brand-mark">TS</span><span>TorchSig Intro</span></a>
+  <div class="nav-links">
+    <a href="index.html">概览</a>
+    <a href="capabilities.html">能力</a>
+    <a href="architecture.html">组成</a>
+    <a href="workflow.html">原理</a>
+    <a href="usage.html">使用</a>
+    <button class="theme-toggle" type="button" data-theme-toggle>切换主题</button>
+  </div>
+</nav>
+<main>
+  <section class="hero">
+    <div class="eyebrow">Capabilities</div>
+    <h1>TorchSig 能做什么？</h1>
+    <p class="lead">它把“信号生成 + 信道/硬件损伤 + 数据增强 + 标签构建 + PyTorch 加载”组合成统一的数据集生产流程。</p>
+  </section>
+
+  <section>
+    <h2>核心能力</h2>
+    <div class="grid">
+      <article class="card"><h3>合成信号库</h3><p>内置 ASK/OOK、FSK/MSK/GFSK、PSK、QAM、OFDM、AM、FM、LFM、ChirpSS 和 Tone 等信号族。</p></article>
+      <article class="card"><h3>分类与检测</h3><p><code>num_signals_max = 1</code> 面向窄带分类；<code>num_signals_max &gt; 1</code> 面向宽带多目标检测。</p></article>
+      <article class="card"><h3>损伤与增强</h3><p>可模拟 AWGN、相位/频率偏移、时钟漂移、衰落、阴影、IQ 不平衡、量化、干扰和非线性效应。</p></article>
+      <article class="card"><h3>多种输出表示</h3><p>支持复数 I/Q、二维 I/Q、频谱图、频谱图图像和 YOLO 风格标签。</p></article>
+      <article class="card"><h3>可重复数据集</h3><p>通过 seed、YAML 配置和 WorkerSeedingDataLoader 固定随机过程，方便 benchmark 和论文实验。</p></article>
+      <article class="card"><h3>离线数据管理</h3><p>使用 DatasetCreator 写入 HDF5 数据集，再用 StaticTorchSigDataset 随机访问和复用。</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>信号类别速览</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>类别族</th><th>示例类别</th><th>典型任务</th></tr></thead>
+        <tbody>
+          <tr><td>Constellation</td><td>ook, ask, bpsk, qpsk, psk, qam</td><td>调制识别、分类基线</td></tr>
+          <tr><td>FSK/MSK</td><td>2fsk, 4fsk, gfsk, msk, gmsk</td><td>窄带通信信号识别</td></tr>
+          <tr><td>OFDM</td><td>ofdm-64 到 ofdm-2048</td><td>宽带信号检测与识别</td></tr>
+          <tr><td>Analog</td><td>am-dsb, am-lsb, am-usb, fm</td><td>模拟调制识别</td></tr>
+          <tr><td>Chirp/Tone</td><td>lfm_data, lfm_radar, chirpss, tone</td><td>雷达、扩频和简单干扰场景</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="callout">提示：如果只是想快速验证流程，可以从 <code>torchsig/datasets/default_configs/narrowband_toy_dataset.yaml</code> 开始。</div>
+</main>
+<footer class="footer"><a class="button" href="architecture.html">下一页：项目组成</a></footer>
+<script src="assets/main.js"></script>
+</body>
+</html>

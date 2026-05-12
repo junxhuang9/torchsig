@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TorchSig 项目介绍 | 工作原理</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="TorchSig intro navigation">
+  <a class="brand" href="index.html"><span class="brand-mark">TS</span><span>TorchSig Intro</span></a>
+  <div class="nav-links">
+    <a href="index.html">概览</a>
+    <a href="capabilities.html">能力</a>
+    <a href="architecture.html">组成</a>
+    <a href="workflow.html">原理</a>
+    <a href="usage.html">使用</a>
+    <button class="theme-toggle" type="button" data-theme-toggle>切换主题</button>
+  </div>
+</nav>
+<main>
+  <section class="hero">
+    <div class="eyebrow">How it works</div>
+    <h1>TorchSig 如何生成一个样本？</h1>
+    <p class="lead">核心思想是先构建噪声底，再生成一个或多个 component signal，将它们经过损伤、频移和时间放置后组合成完整样本，最后按任务输出数据和标签。</p>
+  </section>
+
+  <section>
+    <h2>动态生成流程</h2>
+    <ol class="timeline">
+      <li><strong>读取元数据。</strong> 采样率、样本长度、FFT、SNR、信号数量、带宽和中心频率范围决定样本空间。</li>
+      <li><strong>构建噪声底。</strong> 生成复数高斯噪声，并按 <code>noise_power_db</code> 校正频域平均功率。</li>
+      <li><strong>选择信号生成器。</strong> 根据 <code>signal_generators</code> 和 likelihood 随机选择 BPSK、QAM、OFDM 等生成器。</li>
+      <li><strong>生成 component signal。</strong> 每个生成器输出带有元数据的 <code>Signal</code> 对象。</li>
+      <li><strong>应用 component transforms。</strong> 常用于发射端、信号级或放置前损伤。</li>
+      <li><strong>频移与放置。</strong> 将信号移动到随机中心频率，再放到样本的随机时间位置。</li>
+      <li><strong>处理重叠。</strong> 多信号场景会检查时频矩形是否重叠，并由 <code>cochannel_overlap_probability</code> 控制接受概率。</li>
+      <li><strong>应用 dataset transforms。</strong> 对完整样本应用接收端损伤、频谱图、二维 I/Q 或图像转换。</li>
+      <li><strong>提取标签。</strong> 根据 <code>target_labels</code> 返回完整 Signal、裸数组或 <code>(data, target)</code>。</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>分类与检测的差异</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>窄带分类</h3>
+        <p><code>num_signals_min = num_signals_max = 1</code>，通常输出 I/Q 或二维 I/Q，标签使用 <code>class_name</code> 或 <code>class_index</code>。</p>
+      </article>
+      <article class="card">
+        <h3>宽带检测</h3>
+        <p><code>num_signals_max &gt; 1</code>，样本中包含多个 component signal，通常输出频谱图和 YOLO 风格目标框。</p>
+      </article>
+      <article class="card">
+        <h3>在线 vs 离线</h3>
+        <p>在线生成适合训练时增强；离线写盘适合固定 benchmark、复现实验和共享数据集。</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>返回值规则</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>target_labels</th><th>返回内容</th><th>适合场景</th></tr></thead>
+        <tbody>
+          <tr><td><code>None</code></td><td>完整 <code>Signal</code> 对象</td><td>调试元数据、编写新 transform。</td></tr>
+          <tr><td><code>[]</code></td><td>仅 <code>sample.data</code></td><td>无监督学习或只需输入数据。</td></tr>
+          <tr><td><code>["class_index"]</code></td><td><code>(data, class_index)</code></td><td>分类训练。</td></tr>
+          <tr><td><code>["yolo_label"]</code></td><td><code>(data, yolo_label)</code></td><td>频谱图目标检测。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<footer class="footer"><a class="button" href="usage.html">下一页：如何使用</a></footer>
+<script src="assets/main.js"></script>
+</body>
+</html>

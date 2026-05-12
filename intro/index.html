@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TorchSig 项目介绍 | 概览</title>
+  <meta name="description" content="TorchSig 项目能力、组成和工作原理的中文 HTML 介绍。">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="TorchSig intro navigation">
+  <a class="brand" href="index.html"><span class="brand-mark">TS</span><span>TorchSig Intro</span></a>
+  <div class="nav-links">
+    <a href="index.html">概览</a>
+    <a href="capabilities.html">能力</a>
+    <a href="architecture.html">组成</a>
+    <a href="workflow.html">原理</a>
+    <a href="usage.html">使用</a>
+    <button class="theme-toggle" type="button" data-theme-toggle>切换主题</button>
+  </div>
+</nav>
+<main>
+  <section class="hero">
+    <div class="eyebrow">Signal Processing + PyTorch</div>
+    <h1>用一组静态 HTML 快速理解 TorchSig</h1>
+    <p class="lead">TorchSig 是面向信号处理机器学习的数据工具库，围绕 PyTorch 数据管线提供合成信号生成、射频损伤仿真、数据增强、检测/分类标签构建，以及离线数据集写入与加载能力。</p>
+    <div class="actions">
+      <a class="button primary" href="capabilities.html">查看项目能力</a>
+      <a class="button" href="architecture.html">理解代码组成</a>
+      <a class="button" href="workflow.html">学习工作原理</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>这组页面包含什么？</h2>
+    <div class="grid">
+      <article class="card">
+        <h3>能力地图</h3>
+        <p>总结 TorchSig 能生成哪些信号、支持哪些任务、有哪些 transform 和数据输出形式。</p>
+      </article>
+      <article class="card">
+        <h3>代码组成</h3>
+        <p>按 <code>datasets</code>、<code>signals</code>、<code>transforms</code>、<code>utils</code> 和脚本目录解释仓库模块职责。</p>
+      </article>
+      <article class="card">
+        <h3>工作原理</h3>
+        <p>把动态样本生成过程拆成噪声底、信号生成、损伤应用、频移放置、标签提取和写盘加载。</p>
+      </article>
+      <article class="card">
+        <h3>使用方式</h3>
+        <p>给出内存数据集、YAML 配置、静态数据集和 Lightning DataModule 的最小用法。</p>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>最适合的使用场景</h2>
+    <div class="grid">
+      <div class="card"><div class="kpi">1</div><strong>调制识别</strong><p>生成单信号窄带样本，训练分类器识别 BPSK、QAM、OFDM、AM/FM 等类别。</p></div>
+      <div class="card"><div class="kpi">N</div><strong>宽带检测</strong><p>在一个观测窗口内放置多个信号，输出频谱图和检测标签。</p></div>
+      <div class="card"><div class="kpi">RF</div><strong>损伤仿真</strong><p>模拟噪声、漂移、相位噪声、IQ 不平衡、衰落、功放非线性和干扰。</p></div>
+    </div>
+  </section>
+</main>
+<footer class="footer">TorchSig intro pages are static HTML files under <code>intro/</code>.</footer>
+<script src="assets/main.js"></script>
+</body>
+</html>
